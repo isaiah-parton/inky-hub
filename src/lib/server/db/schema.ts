@@ -6,6 +6,8 @@ export const orgs = pgTable("orgs", {
 	createdAt: timestamp().notNull().defaultNow(),
 });
 
+export type Org = typeof orgs.$inferSelect;
+
 export const users = pgTable("users", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	name: text("name"),
@@ -27,6 +29,14 @@ export const machines = pgTable("machines", {
 	createdAt: timestamp().notNull().defaultNow(),
 	lastOnlineAt: timestamp(),
 });
+
+export const joinCodes = pgTable("join_codes", {
+	id: uuid("id").primaryKey().defaultRandom(),
+	orgId: uuid("org_id").notNull().references(() => orgs.id),
+	code: text("code").notNull().unique(),
+	expiresAt: timestamp("expires_at"),
+	createdAt: timestamp("created_at").notNull().defaultNow(),
+})
 
 export const printers = pgTable("printers", {
 	id: uuid("id").primaryKey().defaultRandom(),
